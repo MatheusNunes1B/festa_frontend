@@ -1,1 +1,1146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardápio — Arraiá Boa Demais</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wood-dark: #2C1505;
+    --wood-mid: #4A1E08;
+    --wood-light: #6B2E10;
+    --wood-warm: #8B4513;
+    --straw: #C8960C;
+    --gold: #F5A623;
+    --gold-light: #FFD166;
+    --gold-pale: #FFF3CC;
+    --cream: #FDF0DC;
+    --cream-dark: #F0D9A8;
+    --red-fest: #C0392B;
+    --shadow-warm: rgba(80, 30, 0, 0.35);
+    --shadow-gold: rgba(245, 166, 35, 0.25);
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--wood-dark);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 41px),
+      repeating-linear-gradient(180deg, transparent 0px, transparent 8px, rgba(255,200,100,0.02) 8px, rgba(255,200,100,0.02) 9px),
+      radial-gradient(ellipse at 20% 50%, rgba(80, 30, 5, 0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(60, 20, 3, 0.3) 0%, transparent 60%),
+      linear-gradient(180deg, #1A0800 0%, #2C1505 30%, #3A1A06 70%, #2C1505 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Bandeirolas ── */
+  .bandeirolas-bar {
+    position: relative;
+    z-index: 10;
+    height: 52px;
+    background: linear-gradient(180deg, #1A0800 0%, transparent 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .bandeirolas-row {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: -20px;
+    right: -20px;
+  }
+
+  .bandeirola {
+    width: 44px;
+    height: 44px;
+    clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .bandeirola::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+    background: repeating-linear-gradient(45deg, transparent 0px, transparent 4px, rgba(0,0,0,0.12) 4px, rgba(0,0,0,0.12) 5px);
+  }
+
+  .string-line {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #8B6914, #F5A623, #8B6914);
+    z-index: 1;
+  }
+
+  /* ── Nav ── */
+  .top-nav {
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(180deg, rgba(44, 21, 5, 0.97) 0%, rgba(44, 21, 5, 0.93) 100%);
+    border-bottom: 2px solid var(--straw);
+    padding: 0 2rem;
+    box-shadow: 0 4px 20px var(--shadow-warm);
+  }
+
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    gap: 1rem;
+  }
+
+  .nav-logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--shadow-gold);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--cream); }
+
+  .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    color: var(--cream-dark);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+  }
+
+  .nav-links a:hover {
+    color: var(--gold);
+    background: rgba(245, 166, 35, 0.1);
+    border-color: rgba(245, 166, 35, 0.3);
+  }
+
+  .nav-links a.active {
+    color: var(--gold);
+    background: rgba(245, 166, 35, 0.15);
+    border-color: var(--straw);
+  }
+
+  .nav-links a svg { width: 16px; height: 16px; }
+
+  /* ── Layout ── */
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* ── Header ── */
+  .cardapio-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  .cardapio-header::before {
+    content: '🍽️ ✦ 🌽 ✦ 🍗 ✦ 🎪';
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    opacity: 0.7;
+    letter-spacing: 6px;
+  }
+
+  .cardapio-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(245, 166, 35, 0.4), 3px 3px 0 var(--wood-dark);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .cardapio-subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: 1.4rem;
+    color: var(--cream-dark);
+    opacity: 0.85;
+  }
+
+  .header-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.25rem auto 0;
+    max-width: 400px;
+  }
+
+  .header-divider::before,
+  .header-divider::after {
+    content: '';
+    flex: 1;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--straw), transparent);
+  }
+
+  /* ── Controls ── */
+  .controls-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap { position: relative; flex: 1; min-width: 220px; }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.8rem;
+    background: rgba(253, 240, 220, 0.08);
+    border: 1.5px solid rgba(200, 150, 12, 0.35);
+    border-radius: 12px;
+    color: var(--cream);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.25s;
+    outline: none;
+  }
+
+  .search-input::placeholder { color: rgba(253, 240, 220, 0.4); }
+
+  .search-input:focus {
+    border-color: var(--gold);
+    background: rgba(245, 166, 35, 0.08);
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
+  }
+
+  .sort-select {
+    padding: 0.8rem 2.2rem 0.8rem 1.2rem;
+    background: rgba(253, 240, 220, 0.08);
+    border: 1.5px solid rgba(200, 150, 12, 0.35);
+    border-radius: 12px;
+    color: var(--cream);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23F5A623' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+  }
+
+  .sort-select option { background: var(--wood-mid); color: var(--cream); }
+  .sort-select:focus { border-color: var(--gold); }
+
+  /* ── Main Grid ── */
+  .main-content {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .main-content { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .mobile-cats { display: flex !important; }
+  }
+
+  /* ── Sidebar ── */
+  .sidebar { position: sticky; top: 1rem; }
+
+  .sidebar-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1.5px solid rgba(200, 150, 12, 0.3);
+  }
+
+  .cat-list { display: flex; flex-direction: column; gap: 0.35rem; }
+
+  .cat-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid transparent;
+    background: rgba(253, 240, 220, 0.05);
+    color: var(--cream-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    width: 100%;
+  }
+
+  .cat-btn:hover {
+    background: rgba(245, 166, 35, 0.12);
+    color: var(--gold);
+    border-color: rgba(245, 166, 35, 0.25);
+  }
+
+  .cat-btn.active {
+    background: rgba(245, 166, 35, 0.18);
+    color: var(--gold);
+    border-color: var(--straw);
+    box-shadow: 0 0 12px rgba(245, 166, 35, 0.12);
+  }
+
+  .cat-btn .cat-emoji { font-size: 1.1rem; }
+
+  .cat-count {
+    margin-left: auto;
+    background: rgba(200, 150, 12, 0.25);
+    color: var(--gold-light);
+    border-radius: 20px;
+    padding: 0 7px;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .cat-btn.active .cat-count { background: var(--gold); color: var(--wood-dark); }
+
+  .fav-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+    margin-top: 1rem;
+    border-radius: 10px;
+    border: 1.5px solid rgba(200, 50, 50, 0.35);
+    background: rgba(200, 57, 43, 0.08);
+    color: var(--cream-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  .fav-toggle:hover,
+  .fav-toggle.active {
+    background: rgba(200, 57, 43, 0.2);
+    color: #FF6B6B;
+    border-color: rgba(200, 57, 43, 0.6);
+  }
+
+  /* ── Mobile Category Scroll ── */
+  .mobile-cats {
+    display: none;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    scrollbar-width: none;
+  }
+  .mobile-cats::-webkit-scrollbar { display: none; }
+
+  .mobile-cat-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    border: 1.5px solid rgba(200, 150, 12, 0.35);
+    background: rgba(253, 240, 220, 0.06);
+    color: var(--cream-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .mobile-cat-pill.active {
+    background: rgba(245, 166, 35, 0.2);
+    color: var(--gold);
+    border-color: var(--straw);
+  }
+
+  /* ── Products ── */
+  .products-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .products-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    color: var(--gold-light);
+  }
+
+  .products-count {
+    font-size: 0.85rem;
+    color: var(--cream-dark);
+    opacity: 0.6;
+    font-weight: 600;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .products-grid { grid-template-columns: 1fr; gap: 1rem; }
+  }
+
+  /* ── Product Card ── */
+  .product-card {
+    background: linear-gradient(160deg, rgba(74, 30, 8, 0.85) 0%, rgba(44, 21, 5, 0.95) 100%);
+    border: 1.5px solid rgba(200, 150, 12, 0.25);
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    animation: cardFadeIn 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 166, 35, 0.12);
+    border-color: rgba(200, 150, 12, 0.5);
+  }
+
+  .product-card.unavailable { opacity: 0.6; filter: grayscale(0.4); }
+
+  .card-image-wrap {
+    position: relative;
+    height: 190px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2C1505, #4A1E08);
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .product-card:hover .card-image { transform: scale(1.06); }
+
+  .card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    background: linear-gradient(135deg, rgba(74, 30, 8, 0.6), rgba(44, 21, 5, 0.8));
+  }
+
+  .badge-wrap {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+  }
+
+  .badge-destaque { background: rgba(245, 166, 35, 0.9); color: var(--wood-dark); }
+  .badge-esgotado { background: rgba(192, 57, 43, 0.9); color: #fff; }
+
+  .fav-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(44, 21, 5, 0.75);
+    backdrop-filter: blur(6px);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .fav-btn:hover { background: rgba(200, 57, 43, 0.3); color: #FF6B6B; }
+  .fav-btn.active { color: #FF4444; background: rgba(200, 57, 43, 0.25); border-color: rgba(200, 57, 43, 0.4); }
+
+  .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, rgba(44, 21, 5, 0.9));
+  }
+
+  .card-body { padding: 1rem 1.1rem 1.1rem; }
+
+  .card-category-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.4rem;
+    color: var(--straw);
+    opacity: 0.85;
+  }
+
+  .card-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 0.35rem;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: rgba(253, 240, 220, 0.6);
+    line-height: 1.45;
+    margin-bottom: 0.9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .card-price {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.35rem;
+    color: var(--gold);
+    text-shadow: 0 0 15px rgba(245, 166, 35, 0.3);
+  }
+
+  .card-price .currency { font-size: 0.85rem; opacity: 0.8; }
+
+  .card-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--straw);
+    background: linear-gradient(135deg, rgba(245, 166, 35, 0.2), rgba(200, 150, 12, 0.15));
+    color: var(--gold);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .card-btn:hover {
+    background: linear-gradient(135deg, rgba(245, 166, 35, 0.35), rgba(200, 150, 12, 0.3));
+    transform: scale(1.03);
+    box-shadow: 0 4px 15px rgba(245, 166, 35, 0.2);
+  }
+
+  .card-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ── Skeleton ── */
+  .skeleton-card {
+    background: rgba(74, 30, 8, 0.6);
+    border: 1.5px solid rgba(200, 150, 12, 0.1);
+    border-radius: 18px;
+    overflow: hidden;
+    animation: skeletonPulse 1.5s ease infinite;
+  }
+
+  @keyframes skeletonPulse {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 0.9; }
+  }
+
+  .skeleton-img { height: 190px; background: rgba(253, 240, 220, 0.06); }
+  .skeleton-body { padding: 1rem 1.1rem 1.1rem; }
+
+  .skeleton-line {
+    height: 14px;
+    border-radius: 7px;
+    background: rgba(253, 240, 220, 0.08);
+    margin-bottom: 0.6rem;
+  }
+
+  .skeleton-line.short  { width: 55%; }
+  .skeleton-line.medium { width: 80%; }
+  .skeleton-line.full   { width: 100%; }
+  .skeleton-line.title  { height: 20px; width: 70%; }
+  .skeleton-line.price  { height: 22px; width: 40%; }
+
+  /* ── Empty State ── */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: rgba(253, 240, 220, 0.5);
+    grid-column: 1 / -1;
+  }
+
+  .empty-icon  { font-size: 4rem; margin-bottom: 1rem; display: block; }
+  .empty-title { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .empty-msg   { font-size: 0.95rem; }
+
+  /* ── Error State ── */
+  .error-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: rgba(200, 57, 43, 0.08);
+    border: 1.5px solid rgba(200, 57, 43, 0.3);
+    border-radius: 16px;
+    grid-column: 1 / -1;
+    color: var(--cream-dark);
+  }
+
+  .error-icon  { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+  .error-title { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: #FF7070; margin-bottom: 0.5rem; }
+
+  .retry-btn {
+    margin-top: 1rem;
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    border: 1.5px solid rgba(200, 57, 43, 0.5);
+    background: rgba(200, 57, 43, 0.15);
+    color: #FF8080;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+
+  .retry-btn:hover { background: rgba(200, 57, 43, 0.25); }
+
+  /* ── Fire deco ── */
+  .fire-deco {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    opacity: 0.07;
+    pointer-events: none;
+    animation: flicker 3s ease infinite alternate;
+    z-index: 0;
+  }
+
+  @keyframes flicker {
+    from { opacity: 0.05; transform: translateX(-50%) scale(1); }
+    to   { opacity: 0.1;  transform: translateX(-50%) scale(1.05); }
+  }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 1.5rem;
+    background: linear-gradient(135deg, rgba(74, 30, 8, 0.97), rgba(44, 21, 5, 0.97));
+    border: 1.5px solid var(--straw);
+    border-radius: 14px;
+    padding: 0.9rem 1.3rem;
+    color: var(--cream);
+    font-weight: 700;
+    font-size: 0.9rem;
+    z-index: 1000;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transform: translateX(150%);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .toast.show { transform: translateX(0); }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .main-content { grid-template-columns: 200px 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .page-wrapper { padding: 1.25rem 1rem 3rem; }
+    .nav-links a span { display: none; }
+    .nav-links a { padding: 0.45rem 0.65rem; }
+    .top-nav { padding: 0 1rem; }
+    .nav-inner { height: 58px; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-logo { font-size: 1.1rem; }
+    .controls-bar { gap: 0.6rem; }
+    .sort-select { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Bandeirolas -->
+<div class="bandeirolas-bar">
+  <div class="string-line"></div>
+  <div class="bandeirolas-row" id="bandeirolas"></div>
+</div>
+
+<!-- Nav -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Arraiá <span>Boa Demais</span></a>
+    <ul class="nav-links">
+      <li><a href="fichas.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg>
+        <span>Fichas</span>
+      </a></li>
+      <li><a href="programacao.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span>Programação</span>
+      </a></li>
+      <li><a href="cardapio.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        <span>Cardápio</span>
+      </a></li>
+      <li><a href="mapa.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Mapa</span>
+      </a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Page -->
+<div class="page-wrapper">
+
+  <header class="cardapio-header">
+    <h1 class="cardapio-title">Cardápio da Festa</h1>
+    <p class="cardapio-subtitle">Comidas e bebidas preparadas com muito amor</p>
+    <div class="header-divider">
+      <span>🌽</span>
+    </div>
+  </header>
+
+  <div class="controls-bar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Buscar prato, bebida..." autocomplete="off">
+    </div>
+    <select class="sort-select" id="sortSelect">
+      <option value="default">Ordenar por</option>
+      <option value="price_asc">Menor preço</option>
+      <option value="price_desc">Maior preço</option>
+      <option value="name_asc">Nome A-Z</option>
+      <option value="featured">Destaques</option>
+    </select>
+  </div>
+
+  <div class="mobile-cats" id="mobileCats"></div>
+
+  <div class="main-content">
+    <aside class="sidebar">
+      <p class="sidebar-title">Categorias</p>
+      <div class="cat-list" id="catList"></div>
+      <button class="fav-toggle" id="favToggle">
+        <span>❤️</span> Meus Favoritos
+        <span id="favCount" style="margin-left:auto; background:rgba(200,57,43,0.25); border-radius:20px; padding:0 7px; font-size:0.75rem; font-weight:800;"></span>
+      </button>
+    </aside>
+
+    <section>
+      <div class="products-header">
+        <p class="products-label" id="productsLabel">Todos os itens</p>
+        <span class="products-count" id="productsCount"></span>
+      </div>
+      <div class="products-grid" id="productsGrid"></div>
+    </section>
+  </div>
+
+</div>
+
+<div class="fire-deco">🔥🔥🔥</div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import menuService from './menuService.js';
+
+/* ══════════════════════════════════════
+   ARRAIÁ BOA DEMAIS — CARDÁPIO DIGITAL
+   Produção: Cloudflare Pages → Vercel API
+══════════════════════════════════════ */
+
+const CATEGORY_ICONS = {
+  'Todos':       '🍽️',
+  'Espetinhos':  '🍢',
+  'Comes e Bebes': '🌽',
+  'Doces':       '🍮',
+  'Bebidas':     '🥤',
+  'Pratos':      '🍛',
+};
+
+/* ── State ── */
+let allItems       = [];
+let favorites      = JSON.parse(localStorage.getItem('arraia_favs') || '[]');
+let activeCategory = 'all';
+let showFavs       = false;
+let searchQuery    = '';
+let sortOrder      = 'default';
+let toastTimeout;
+
+/* ── Bandeirolas ── */
+function buildBandeirolas() {
+  const colors = [
+    ['#C0392B','#E74C3C'], ['#E67E22','#F39C12'], ['#F1C40F','#F5A623'],
+    ['#27AE60','#2ECC71'], ['#2980B9','#3498DB'], ['#8E44AD','#9B59B6'],
+    ['#E74C3C','#C0392B'], ['#3498DB','#2980B9'],
+  ];
+  const container = document.getElementById('bandeirolas');
+  const count = Math.ceil((window.innerWidth + 40) / 44) + 2;
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const c = colors[i % colors.length];
+    const d = document.createElement('div');
+    d.className = 'bandeirola';
+    d.style.background = `linear-gradient(135deg, ${c[0]}, ${c[1]})`;
+    container.appendChild(d);
+  }
+}
+
+/* ── Categories ── */
+function getCategories() {
+  return ['Todos', ...new Set(allItems.map(i => i.category))];
+}
+
+function renderCategories() {
+  const cats = getCategories();
+  const catCounts = {};
+  allItems.forEach(i => { catCounts[i.category] = (catCounts[i.category] || 0) + 1; });
+
+  document.getElementById('catList').innerHTML = cats.map(cat => {
+    const key   = cat === 'Todos' ? 'all' : cat;
+    const count = cat === 'Todos' ? allItems.length : (catCounts[cat] || 0);
+    const emoji = CATEGORY_ICONS[cat] || '🍽️';
+    return `
+      <button class="cat-btn ${activeCategory === key ? 'active' : ''}"
+              onclick="selectCategory('${key}')">
+        <span class="cat-emoji">${emoji}</span>
+        ${cat}
+        <span class="cat-count">${count}</span>
+      </button>`;
+  }).join('');
+
+  document.getElementById('mobileCats').innerHTML = cats.map(cat => {
+    const key   = cat === 'Todos' ? 'all' : cat;
+    const emoji = CATEGORY_ICONS[cat] || '🍽️';
+    return `
+      <button class="mobile-cat-pill ${activeCategory === key ? 'active' : ''}"
+              onclick="selectCategory('${key}')">
+        ${emoji} ${cat}
+      </button>`;
+  }).join('');
+}
+
+/* ── Filter & Sort ── */
+function getFilteredItems() {
+  let items = [...allItems];
+
+  if (showFavs) {
+    items = items.filter(i => favorites.includes(i.id));
+  }
+
+  if (activeCategory !== 'all') {
+    items = items.filter(i => i.category === activeCategory);
+  }
+
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    items = items.filter(i =>
+      i.name.toLowerCase().includes(q) ||
+      (i.description || '').toLowerCase().includes(q) ||
+      i.category.toLowerCase().includes(q)
+    );
+  }
+
+  switch (sortOrder) {
+    case 'price_asc':  items.sort((a, b) => a.price - b.price); break;
+    case 'price_desc': items.sort((a, b) => b.price - a.price); break;
+    case 'name_asc':   items.sort((a, b) => a.name.localeCompare(b.name)); break;
+    case 'featured':   items.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0)); break;
+  }
+
+  return items;
+}
+
+/* ── Render Products ── */
+function renderProducts() {
+  const items = getFilteredItems();
+  const grid  = document.getElementById('productsGrid');
+  const label = document.getElementById('productsLabel');
+  const count = document.getElementById('productsCount');
+
+  if (showFavs)               label.textContent = 'Meus Favoritos';
+  else if (activeCategory !== 'all') label.textContent = activeCategory;
+  else if (searchQuery)       label.textContent = `Busca: "${searchQuery}"`;
+  else                        label.textContent = 'Todos os itens';
+
+  count.textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
+
+  if (items.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-icon">${showFavs ? '❤️' : '🔍'}</span>
+        <p class="empty-title">${showFavs ? 'Nenhum favorito ainda' : 'Nada encontrado'}</p>
+        <p class="empty-msg">${showFavs ? 'Dê um ❤️ nos pratos que você ama!' : 'Tente outra busca ou categoria'}</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map((item, index) => {
+    const isFav  = favorites.includes(item.id);
+    const price  = typeof item.price === 'number' ? item.price.toFixed(2) : item.price;
+    const emoji  = item.emoji || '🍽️';
+
+    return `
+      <article class="product-card ${!item.available ? 'unavailable' : ''}"
+               style="animation-delay: ${index * 0.06}s">
+        <div class="card-image-wrap">
+          ${item.image_url
+            ? `<img class="card-image" src="${item.image_url}" alt="${item.name}" loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+               <div class="card-image-placeholder" style="display:none">${emoji}</div>`
+            : `<div class="card-image-placeholder">${emoji}</div>`
+          }
+          <div class="badge-wrap">
+            ${item.featured  ? '<span class="badge badge-destaque">⭐ Destaque</span>' : ''}
+            ${!item.available ? '<span class="badge badge-esgotado">⛔ Esgotado</span>' : ''}
+          </div>
+          <button class="fav-btn ${isFav ? 'active' : ''}"
+                  data-id="${item.id}"
+                  aria-label="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
+            ${isFav ? '❤️' : '🤍'}
+          </button>
+          <div class="image-overlay"></div>
+        </div>
+        <div class="card-body">
+          <p class="card-category-tag">${item.category}</p>
+          <h3 class="card-name">${item.name}</h3>
+          <p class="card-desc">${item.description || ''}</p>
+          <div class="card-footer">
+            <p class="card-price">
+              <span class="currency">R$</span> ${price.replace('.', ',')}
+            </p>
+            <button class="card-btn" ${!item.available ? 'disabled' : ''}
+                    data-order-id="${item.id}" data-order-name="${item.name}">
+              ${item.available ? '+ Pedir' : 'Esgotado'}
+            </button>
+          </div>
+        </div>
+      </article>`;
+  }).join('');
+
+  /* Delegação de eventos nos botões renderizados */
+  grid.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', () => toggleFav(btn.dataset.id, btn));
+  });
+
+  grid.querySelectorAll('.card-btn:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', () => showToast(`🛒 "${btn.dataset.orderName}" adicionado!`));
+  });
+}
+
+/* ── Skeleton ── */
+function showSkeleton(count = 8) {
+  document.getElementById('productsGrid').innerHTML = Array.from({ length: count }, () => `
+    <div class="skeleton-card">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line title"></div>
+        <div class="skeleton-line full"></div>
+        <div class="skeleton-line medium"></div>
+        <div style="display:flex; justify-content:space-between; margin-top:1rem">
+          <div class="skeleton-line price"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── Error State ── */
+function showError(message = '') {
+  document.getElementById('productsGrid').innerHTML = `
+    <div class="error-state">
+      <span class="error-icon">⚠️</span>
+      <p class="error-title">Erro ao carregar o cardápio</p>
+      <p style="font-size:0.9rem; opacity:0.7">${message || 'Verifique sua conexão e tente novamente.'}</p>
+      <button class="retry-btn" id="retryBtn">🔄 Tentar novamente</button>
+    </div>`;
+  document.getElementById('retryBtn')?.addEventListener('click', init);
+}
+
+/* ── Actions ── */
+window.selectCategory = function(cat) {
+  activeCategory = cat;
+  showFavs = false;
+  document.getElementById('favToggle').classList.remove('active');
+  renderCategories();
+  renderProducts();
+};
+
+function toggleFav(id, btn) {
+  const idx = favorites.indexOf(id);
+  if (idx === -1) {
+    favorites.push(id);
+    btn.textContent = '❤️';
+    btn.classList.add('active');
+    showToast('❤️ Adicionado aos favoritos!');
+  } else {
+    favorites.splice(idx, 1);
+    btn.textContent = '🤍';
+    btn.classList.remove('active');
+    showToast('💔 Removido dos favoritos');
+  }
+  localStorage.setItem('arraia_favs', JSON.stringify(favorites));
+  updateFavCount();
+  if (showFavs) renderProducts();
+}
+
+function updateFavCount() {
+  const el = document.getElementById('favCount');
+  el.textContent = favorites.length > 0 ? favorites.length : '';
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+/* ── Init ── */
+async function init() {
+  buildBandeirolas();
+  showSkeleton();
+
+  try {
+    const data = await menuService.getAll();
+    allItems = data.items || data;
+
+    renderCategories();
+    renderProducts();
+    updateFavCount();
+  } catch (err) {
+    console.error('[Cardápio] Falha ao carregar itens:', err);
+    showError(err.message);
+  }
+}
+
+/* ── Listeners ── */
+document.getElementById('favToggle').addEventListener('click', () => {
+  showFavs = !showFavs;
+  document.getElementById('favToggle').classList.toggle('active', showFavs);
+  activeCategory = 'all';
+  renderCategories();
+  renderProducts();
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.trim();
+  renderProducts();
+});
+
+document.getElementById('sortSelect').addEventListener('change', e => {
+  sortOrder = e.target.value;
+  renderProducts();
+});
+
+window.addEventListener('resize', buildBandeirolas);
+
+/* ── Start ── */
+init();
+</script>
+</body>
+</html>

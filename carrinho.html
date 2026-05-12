@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrinho — Arraiá Boa Demais</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wood-dark: #2C1505;
+    --wood-mid: #4A1E08;
+    --wood-light: #6B2E10;
+    --wood-warm: #8B4513;
+    --straw: #C8960C;
+    --gold: #F5A623;
+    --gold-light: #FFD166;
+    --gold-pale: #FFF3CC;
+    --cream: #FDF0DC;
+    --cream-dark: #F0D9A8;
+    --red-fest: #C0392B;
+    --green-ok: #27AE60;
+    --shadow-warm: rgba(80, 30, 0, 0.35);
+    --shadow-gold: rgba(245, 166, 35, 0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--wood-dark);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 41px),
+      repeating-linear-gradient(180deg, transparent 0px, transparent 8px, rgba(255,200,100,0.02) 8px, rgba(255,200,100,0.02) 9px),
+      radial-gradient(ellipse at 20% 50%, rgba(80, 30, 5, 0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(60, 20, 3, 0.3) 0%, transparent 60%),
+      linear-gradient(180deg, #1A0800 0%, #2C1505 30%, #3A1A06 70%, #2C1505 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Bandeirolas ── */
+  .bandeirolas-bar {
+    position: relative; z-index: 10; height: 52px;
+    background: linear-gradient(180deg, #1A0800 0%, transparent 100%);
+    overflow: hidden;
+  }
+  .bandeirolas-row { display: flex; position: absolute; top: 0; left: -20px; right: -20px; }
+  .bandeirola { width: 44px; height: 44px; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); flex-shrink: 0; }
+  .string-line { position: absolute; top: 3px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #8B6914, #F5A623, #8B6914); z-index: 1; }
+
+  /* ── Nav ── */
+  .top-nav {
+    position: relative; z-index: 10;
+    background: linear-gradient(180deg, rgba(44,21,5,0.97) 0%, rgba(44,21,5,0.93) 100%);
+    border-bottom: 2px solid var(--straw);
+    padding: 0 2rem;
+    box-shadow: 0 4px 20px var(--shadow-warm);
+  }
+  .nav-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; gap: 1rem; }
+  .nav-logo { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--gold); text-shadow: 0 0 20px var(--shadow-gold); letter-spacing: 0.5px; white-space: nowrap; text-decoration: none; }
+  .nav-logo span { color: var(--cream); }
+  .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+  .nav-links a { display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; border-radius: 8px; color: var(--cream-dark); text-decoration: none; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.2s; border: 1.5px solid transparent; position: relative; }
+  .nav-links a:hover { color: var(--gold); background: rgba(245,166,35,0.1); border-color: rgba(245,166,35,0.3); }
+  .nav-links a.active { color: var(--gold); background: rgba(245,166,35,0.15); border-color: var(--straw); }
+  .nav-links a svg { width: 16px; height: 16px; }
+
+  .cart-badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    background: var(--red-fest);
+    color: #fff;
+    border-radius: 50%;
+    width: 18px; height: 18px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    display: none;
+  }
+  .cart-badge.visible { display: flex; }
+
+  /* ── Layout ── */
+  .page-wrapper { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .page-header { text-align: center; margin-bottom: 2.5rem; }
+  .page-header::before { content: '🛒 ✦ 🎪 ✦ 🛍️'; display: block; font-size: 1.1rem; margin-bottom: 0.75rem; opacity: 0.7; letter-spacing: 6px; }
+  .page-title { font-family: 'Fredoka One', cursive; font-size: clamp(2rem, 5vw, 3.2rem); color: var(--gold); text-shadow: 0 0 30px rgba(245,166,35,0.4), 3px 3px 0 var(--wood-dark); line-height: 1.1; margin-bottom: 0.5rem; }
+  .page-subtitle { font-family: 'Caveat', cursive; font-size: 1.3rem; color: var(--cream-dark); opacity: 0.85; }
+  .header-divider { display: flex; align-items: center; gap: 1rem; margin: 1.25rem auto 0; max-width: 400px; }
+  .header-divider::before, .header-divider::after { content: ''; flex: 1; height: 1.5px; background: linear-gradient(90deg, transparent, var(--straw), transparent); }
+
+  /* ── Grid ── */
+  .cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .cart-layout { grid-template-columns: 1fr; }
+    .cart-summary { order: -1; }
+  }
+
+  /* ── Items List ── */
+  .cart-items-section {}
+
+  .section-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  .cart-item {
+    background: linear-gradient(160deg, rgba(74,30,8,0.85) 0%, rgba(44,21,5,0.95) 100%);
+    border: 1.5px solid rgba(200,150,12,0.22);
+    border-radius: 16px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    animation: itemIn 0.35s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes itemIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .cart-item:hover { border-color: rgba(200,150,12,0.45); box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+
+  .item-thumb {
+    width: 64px; height: 64px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2C1505, #4A1E08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .item-info { flex: 1; min-width: 0; }
+  .item-cat { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--straw); opacity: 0.8; }
+  .item-name { font-family: 'Fredoka One', cursive; font-size: 1.05rem; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-unit-price { font-size: 0.8rem; color: rgba(253,240,220,0.5); font-weight: 600; }
+
+  .item-qty {
+    display: flex; align-items: center; gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .qty-btn {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(200,150,12,0.4);
+    background: rgba(253,240,220,0.06);
+    color: var(--gold);
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+
+  .qty-btn:hover { background: rgba(245,166,35,0.2); border-color: var(--straw); }
+
+  .qty-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: var(--cream);
+    min-width: 24px;
+    text-align: center;
+  }
+
+  .item-total {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    color: var(--gold);
+    text-shadow: 0 0 12px rgba(245,166,35,0.25);
+    flex-shrink: 0;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .item-remove {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(200,57,43,0.3);
+    background: rgba(200,57,43,0.08);
+    color: rgba(255,120,120,0.7);
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .item-remove:hover { background: rgba(200,57,43,0.25); color: #FF6B6B; border-color: rgba(200,57,43,0.6); }
+
+  /* ── Clear all ── */
+  .clear-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    border: 1.5px solid rgba(200,57,43,0.35);
+    background: rgba(200,57,43,0.08);
+    color: rgba(255,120,120,0.8);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.8rem;
+    cursor: pointer; transition: all 0.2s;
+    margin-left: auto;
+  }
+  .clear-btn:hover { background: rgba(200,57,43,0.2); color: #FF6B6B; }
+
+  /* ── Summary ── */
+  .cart-summary {
+    position: sticky;
+    top: 1rem;
+    background: linear-gradient(160deg, rgba(74,30,8,0.9) 0%, rgba(44,21,5,0.97) 100%);
+    border: 1.5px solid rgba(200,150,12,0.3);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  .summary-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.25rem;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1.5px solid rgba(200,150,12,0.2);
+  }
+
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.65rem;
+    font-size: 0.92rem;
+    color: rgba(253,240,220,0.75);
+    font-weight: 600;
+  }
+
+  .summary-row.total {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: var(--cream);
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1.5px solid rgba(200,150,12,0.25);
+    margin-bottom: 0;
+  }
+
+  .summary-row.total .val { color: var(--gold); text-shadow: 0 0 15px rgba(245,166,35,0.35); }
+
+  .summary-row.discount { color: #82E0AA; }
+
+  /* ── Coupon ── */
+  .coupon-section { margin: 1.25rem 0; }
+
+  .coupon-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--straw);
+    margin-bottom: 0.5rem;
+  }
+
+  .coupon-input-wrap { display: flex; gap: 0.5rem; }
+
+  .coupon-input {
+    flex: 1;
+    padding: 0.65rem 0.9rem;
+    background: rgba(253,240,220,0.07);
+    border: 1.5px solid rgba(200,150,12,0.3);
+    border-radius: 10px;
+    color: var(--cream);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    outline: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .coupon-input::placeholder { color: rgba(253,240,220,0.3); text-transform: none; letter-spacing: 0; }
+  .coupon-input:focus { border-color: var(--gold); background: rgba(245,166,35,0.07); }
+
+  .coupon-apply-btn {
+    padding: 0.65rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--straw);
+    background: linear-gradient(135deg, rgba(245,166,35,0.2), rgba(200,150,12,0.15));
+    color: var(--gold);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 0.85rem;
+    cursor: pointer; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .coupon-apply-btn:hover { background: linear-gradient(135deg, rgba(245,166,35,0.35), rgba(200,150,12,0.3)); }
+
+  .coupon-active {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.6rem 0.9rem;
+    background: rgba(39,174,96,0.12);
+    border: 1.5px solid rgba(39,174,96,0.3);
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #82E0AA;
+  }
+  .coupon-remove { cursor: pointer; opacity: 0.6; transition: opacity 0.15s; }
+  .coupon-remove:hover { opacity: 1; }
+
+  /* ── Checkout btn ── */
+  .checkout-btn {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1.25rem;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, var(--straw), var(--gold), var(--straw));
+    background-size: 200% auto;
+    color: var(--wood-dark);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(245,166,35,0.3);
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .checkout-btn:hover {
+    background-position: right center;
+    box-shadow: 0 6px 30px rgba(245,166,35,0.5);
+    transform: translateY(-2px);
+  }
+  .checkout-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .continue-btn {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    border-radius: 12px;
+    border: 1.5px solid rgba(200,150,12,0.35);
+    background: transparent;
+    color: var(--cream-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; transition: all 0.2s;
+    text-align: center;
+  }
+  .continue-btn:hover { border-color: var(--straw); color: var(--gold); background: rgba(245,166,35,0.07); }
+
+  /* ── Empty State ── */
+  .cart-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: rgba(253,240,220,0.45);
+  }
+  .cart-empty .icon { font-size: 5rem; display: block; margin-bottom: 1rem; animation: floatIcon 3s ease-in-out infinite; }
+  @keyframes floatIcon { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  .cart-empty h2 { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .cart-empty p { font-size: 0.95rem; margin-bottom: 1.5rem; }
+
+  .go-shop-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 12px;
+    border: 1.5px solid var(--straw);
+    background: linear-gradient(135deg, rgba(245,166,35,0.2), rgba(200,150,12,0.15));
+    color: var(--gold);
+    text-decoration: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+  .go-shop-btn:hover { background: linear-gradient(135deg, rgba(245,166,35,0.35), rgba(200,150,12,0.3)); transform: translateY(-2px); }
+
+  /* ── Modal Confirmação ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: linear-gradient(160deg, rgba(74,30,8,0.98), rgba(44,21,5,0.99));
+    border: 1.5px solid rgba(200,150,12,0.4);
+    border-radius: 24px;
+    padding: 2rem;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  }
+  .modal-overlay.open .modal { transform: scale(1); }
+
+  .modal-icon { font-size: 3.5rem; display: block; margin-bottom: 0.75rem; }
+  .modal-title { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .modal-text { font-size: 0.9rem; color: rgba(253,240,220,0.65); line-height: 1.5; margin-bottom: 1.5rem; }
+
+  .modal-order-items {
+    background: rgba(253,240,220,0.05);
+    border: 1px solid rgba(200,150,12,0.2);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    text-align: left;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .modal-order-item { font-size: 0.85rem; font-weight: 600; color: var(--cream-dark); padding: 0.25rem 0; display: flex; justify-content: space-between; }
+
+  .modal-total {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-actions { display: flex; gap: 0.75rem; }
+  .modal-cancel {
+    flex: 1; padding: 0.75rem;
+    border-radius: 12px; border: 1.5px solid rgba(200,150,12,0.3);
+    background: transparent; color: var(--cream-dark);
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .modal-cancel:hover { border-color: var(--straw); color: var(--gold); }
+  .modal-confirm {
+    flex: 2; padding: 0.75rem;
+    border-radius: 12px; border: none;
+    background: linear-gradient(135deg, var(--straw), var(--gold));
+    color: var(--wood-dark);
+    font-family: 'Fredoka One', cursive; font-size: 1rem;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(245,166,35,0.3);
+  }
+  .modal-confirm:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(245,166,35,0.45); }
+
+  /* ── Success modal ── */
+  .success-content { display: none; }
+  .modal.success .success-content { display: block; }
+  .modal.success .checkout-content { display: none; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 2rem; right: 1.5rem;
+    background: linear-gradient(135deg, rgba(74,30,8,0.97), rgba(44,21,5,0.97));
+    border: 1.5px solid var(--straw);
+    border-radius: 14px;
+    padding: 0.9rem 1.3rem;
+    color: var(--cream);
+    font-weight: 700; font-size: 0.9rem;
+    z-index: 1000;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    display: flex; align-items: center; gap: 0.6rem;
+    transform: translateX(150%);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 320px;
+  }
+  .toast.show { transform: translateX(0); }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .top-nav { padding: 0 1rem; }
+    .nav-inner { height: 58px; }
+    .nav-links a span { display: none; }
+    .nav-links a { padding: 0.45rem 0.65rem; }
+    .page-wrapper { padding: 1.25rem 1rem 3rem; }
+    .item-total { min-width: 60px; font-size: 1rem; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-logo { font-size: 1.1rem; }
+    .cart-item { gap: 0.65rem; }
+    .item-thumb { width: 52px; height: 52px; font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bandeirolas-bar">
+  <div class="string-line"></div>
+  <div class="bandeirolas-row" id="bandeirolas"></div>
+</div>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Arraiá <span>Boa Demais</span></a>
+    <ul class="nav-links">
+      <li><a href="fichas.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg>
+        <span>Fichas</span>
+      </a></li>
+      <li><a href="programacao.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span>Programação</span>
+      </a></li>
+      <li><a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        <span>Cardápio</span>
+      </a></li>
+      <li><a href="mapa.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Mapa</span>
+      </a></li>
+      <li><a href="carrinho.html" class="active" style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span>Carrinho</span>
+        <span class="cart-badge" id="navBadge"></span>
+      </a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <header class="page-header">
+    <h1 class="page-title">Seu Carrinho</h1>
+    <p class="page-subtitle">Revise seus pedidos antes de finalizar</p>
+    <div class="header-divider"><span>🛒</span></div>
+  </header>
+
+  <div id="cartContent"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="checkout-content">
+      <span class="modal-icon">🎪</span>
+      <h2 class="modal-title">Confirmar Pedido</h2>
+      <p class="modal-text">Confira seus itens e finalize com a equipe na barraca. Leve este resumo!</p>
+      <div class="modal-order-items" id="modalItems"></div>
+      <div class="modal-total" id="modalTotal"></div>
+      <div class="modal-actions">
+        <button class="modal-cancel" id="modalCancel">Voltar</button>
+        <button class="modal-confirm" id="modalConfirm">✅ Confirmar!</button>
+      </div>
+    </div>
+    <div class="success-content">
+      <span class="modal-icon">🎉</span>
+      <h2 class="modal-title">Pedido Confirmado!</h2>
+      <p class="modal-text">Dirija-se à barraca com este número e retire seu pedido. Boa festa!</p>
+      <div style="font-family:'Fredoka One',cursive; font-size:3rem; color:var(--gold); margin:1rem 0" id="orderNumber"></div>
+      <button class="modal-confirm" id="modalClose" style="width:100%;margin-top:0.5rem">🎪 Continuar festejando!</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import cartService from './cartService.js';
+
+let toastTimeout;
+
+function fmt(v) { return `R$ ${Number(v).toFixed(2).replace('.', ',')}` }
+
+/* ── Bandeirolas ── */
+function buildBandeirolas() {
+  const colors = [
+    ['#C0392B','#E74C3C'],['#E67E22','#F39C12'],['#F1C40F','#F5A623'],
+    ['#27AE60','#2ECC71'],['#2980B9','#3498DB'],['#8E44AD','#9B59B6'],
+  ];
+  const c = document.getElementById('bandeirolas');
+  const n = Math.ceil((window.innerWidth + 40) / 44) + 2;
+  c.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const cl = colors[i % colors.length];
+    const d = document.createElement('div');
+    d.className = 'bandeirola';
+    d.style.background = `linear-gradient(135deg,${cl[0]},${cl[1]})`;
+    c.appendChild(d);
+  }
+}
+
+/* ── Nav badge ── */
+function updateNavBadge() {
+  const badge = document.getElementById('navBadge');
+  const count = cartService.getCount();
+  badge.textContent = count;
+  badge.classList.toggle('visible', count > 0);
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ── Render Cart ── */
+function renderCart() {
+  const { items, count, subtotal, discount, total, coupon } = cartService.getSummary();
+  const el = document.getElementById('cartContent');
+
+  if (count === 0) {
+    el.innerHTML = `
+      <div class="cart-empty">
+        <span class="icon">🛒</span>
+        <h2>Seu carrinho está vazio</h2>
+        <p>Que tal adicionar uns espetinhos e uma garapa?</p>
+        <a href="cardapio.html" class="go-shop-btn">🍽️ Ver Cardápio</a>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="cart-layout">
+      <div class="cart-items-section">
+        <div class="section-label">
+          🛍️ Itens (${count})
+          <button class="clear-btn" id="clearBtn">🗑️ Limpar tudo</button>
+        </div>
+        <div id="itemsList"></div>
+      </div>
+      <div class="cart-summary">
+        <p class="summary-title">💰 Resumo do Pedido</p>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>${fmt(subtotal)}</span>
+        </div>
+        ${discount > 0 ? `<div class="summary-row discount"><span>🏷️ Desconto (${coupon.code})</span><span>− ${fmt(discount)}</span></div>` : ''}
+        <div class="summary-row total">
+          <span>Total</span>
+          <span class="val">${fmt(total)}</span>
+        </div>
+
+        <div class="coupon-section">
+          <p class="coupon-label">🎟️ Cupom de desconto</p>
+          ${coupon ? `
+            <div class="coupon-active">
+              <span>✅ ${coupon.code} — ${coupon.label}</span>
+              <span class="coupon-remove" id="removeCoupon">✕</span>
+            </div>` : `
+            <div class="coupon-input-wrap">
+              <input class="coupon-input" id="couponInput" placeholder="Digite o cupom" maxlength="20">
+              <button class="coupon-apply-btn" id="couponApply">Aplicar</button>
+            </div>`}
+        </div>
+
+        <button class="checkout-btn" id="checkoutBtn">🎪 Finalizar Pedido</button>
+        <a href="cardapio.html" class="continue-btn" style="display:block;text-decoration:none;text-align:center;padding:0.75rem;margin-top:0.75rem;border-radius:12px;border:1.5px solid rgba(200,150,12,0.35);background:transparent;color:var(--cream-dark);font-family:'Nunito',sans-serif;font-weight:700;font-size:0.9rem;transition:all 0.2s">
+          ← Continuar comprando
+        </a>
+      </div>
+    </div>`;
+
+  /* Render items */
+  document.getElementById('itemsList').innerHTML = items.map((item, i) => `
+    <div class="cart-item" style="animation-delay:${i*0.07}s" data-id="${item.id}">
+      <div class="item-thumb">
+        ${item.image_url
+          ? `<img src="${item.image_url}" alt="${item.name}" onerror="this.style.display='none';this.nextSibling.style.display='flex'" style="width:100%;height:100%;object-fit:cover;border-radius:12px">
+             <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:2rem">${item.emoji}</span>`
+          : item.emoji}
+      </div>
+      <div class="item-info">
+        <p class="item-cat">${item.category}</p>
+        <p class="item-name">${item.name}</p>
+        <p class="item-unit-price">${fmt(item.price)} / un.</p>
+      </div>
+      <div class="item-qty">
+        <button class="qty-btn" data-action="dec" data-id="${item.id}">−</button>
+        <span class="qty-num">${item.quantity}</span>
+        <button class="qty-btn" data-action="inc" data-id="${item.id}">+</button>
+      </div>
+      <div class="item-total">${fmt(item.price * item.quantity)}</div>
+      <button class="item-remove" data-id="${item.id}" title="Remover">✕</button>
+    </div>`).join('');
+
+  /* Event listeners */
+  document.getElementById('clearBtn')?.addEventListener('click', () => {
+    if (confirm('Limpar todo o carrinho?')) { cartService.clear(); renderCart(); showToast('🗑️ Carrinho limpo'); }
+  });
+
+  document.querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const { action, id } = btn.dataset;
+      action === 'inc' ? cartService.increment(id) : cartService.decrement(id);
+      renderCart(); updateNavBadge();
+    });
+  });
+
+  document.querySelectorAll('.item-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = cartService.getItems().find(i => i.id === btn.dataset.id)?.name || 'Item';
+      cartService.remove(btn.dataset.id);
+      renderCart(); updateNavBadge();
+      showToast(`🗑️ "${name}" removido`);
+    });
+  });
+
+  document.getElementById('couponApply')?.addEventListener('click', () => {
+    const code = document.getElementById('couponInput')?.value.trim();
+    if (!code) return;
+    try {
+      const c = cartService.applyCoupon(code);
+      showToast(`🏷️ Cupom aplicado: ${c.label}`);
+      renderCart();
+    } catch (e) { showToast('❌ ' + e.message); }
+  });
+
+  document.getElementById('removeCoupon')?.addEventListener('click', () => {
+    cartService.removeCoupon(); renderCart(); showToast('🏷️ Cupom removido');
+  });
+
+  document.getElementById('checkoutBtn')?.addEventListener('click', openModal);
+}
+
+/* ── Modal ── */
+function openModal() {
+  const { items, total } = cartService.getSummary();
+  document.getElementById('modalItems').innerHTML = items.map(i =>
+    `<div class="modal-order-item"><span>${i.quantity}× ${i.name}</span><span>${fmt(i.price * i.quantity)}</span></div>`
+  ).join('');
+  document.getElementById('modalTotal').textContent = `Total: ${fmt(total)}`;
+  document.getElementById('modal').classList.remove('success');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+document.getElementById('modalCancel').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+document.getElementById('modalConfirm').addEventListener('click', () => {
+  const num = Math.floor(Math.random() * 900) + 100;
+  document.getElementById('orderNumber').textContent = `#${num}`;
+  document.getElementById('modal').classList.add('success');
+  cartService.clear();
+  updateNavBadge();
+});
+
+document.getElementById('modalClose').addEventListener('click', () => {
+  closeModal();
+  setTimeout(renderCart, 300);
+});
+
+/* ── Init ── */
+buildBandeirolas();
+updateNavBadge();
+renderCart();
+window.addEventListener('resize', buildBandeirolas);
+</script>
+</body>
+</html>

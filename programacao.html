@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programação — Arraiá Boa Demais</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wood-dark: #2C1505;
+    --wood-mid: #4A1E08;
+    --wood-light: #6B2E10;
+    --wood-warm: #8B4513;
+    --straw: #C8960C;
+    --gold: #F5A623;
+    --gold-light: #FFD166;
+    --gold-pale: #FFF3CC;
+    --cream: #FDF0DC;
+    --cream-dark: #F0D9A8;
+    --red-fest: #C0392B;
+    --shadow-warm: rgba(80, 30, 0, 0.35);
+    --shadow-gold: rgba(245, 166, 35, 0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--wood-dark);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 41px),
+      repeating-linear-gradient(180deg, transparent 0px, transparent 8px, rgba(255,200,100,0.02) 8px, rgba(255,200,100,0.02) 9px),
+      radial-gradient(ellipse at 20% 50%, rgba(80,30,5,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(60,20,3,0.3) 0%, transparent 60%),
+      linear-gradient(180deg, #1A0800 0%, #2C1505 30%, #3A1A06 70%, #2C1505 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bandeirolas-bar {
+    position: relative; z-index: 10; height: 52px;
+    background: linear-gradient(180deg, #1A0800 0%, transparent 100%);
+    overflow: hidden;
+  }
+  .bandeirolas-row { display: flex; position: absolute; top: 0; left: -20px; right: -20px; }
+  .bandeirola { width: 44px; height: 44px; clip-path: polygon(50% 100%, 0% 0%, 100% 0%); flex-shrink: 0; }
+  .string-line { position: absolute; top: 3px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #8B6914, #F5A623, #8B6914); z-index: 1; }
+
+  .top-nav {
+    position: relative; z-index: 10;
+    background: linear-gradient(180deg, rgba(44,21,5,0.97) 0%, rgba(44,21,5,0.93) 100%);
+    border-bottom: 2px solid var(--straw);
+    padding: 0 2rem;
+    box-shadow: 0 4px 20px var(--shadow-warm);
+  }
+  .nav-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; gap: 1rem; }
+  .nav-logo { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--gold); text-shadow: 0 0 20px var(--shadow-gold); letter-spacing: 0.5px; white-space: nowrap; text-decoration: none; }
+  .nav-logo span { color: var(--cream); }
+  .nav-links { display: flex; gap: 0.25rem; list-style: none; align-items: center; }
+  .nav-links a { display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; border-radius: 8px; color: var(--cream-dark); text-decoration: none; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.2s; border: 1.5px solid transparent; }
+  .nav-links a:hover { color: var(--gold); background: rgba(245,166,35,0.1); border-color: rgba(245,166,35,0.3); }
+  .nav-links a.active { color: var(--gold); background: rgba(245,166,35,0.15); border-color: var(--straw); }
+  .nav-links a svg { width: 16px; height: 16px; }
+
+  .page-wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .page-header { text-align: center; margin-bottom: 2.5rem; }
+  .page-header::before { content: '🎵 ✦ 🪗 ✦ 💃 ✦ 🕺'; display: block; font-size: 1.1rem; margin-bottom: 0.75rem; opacity: 0.7; letter-spacing: 6px; }
+  .page-title { font-family: 'Fredoka One', cursive; font-size: clamp(2rem, 5vw, 3.2rem); color: var(--gold); text-shadow: 0 0 30px rgba(245,166,35,0.4), 3px 3px 0 var(--wood-dark); line-height: 1.1; margin-bottom: 0.5rem; }
+  .page-subtitle { font-family: 'Caveat', cursive; font-size: 1.3rem; color: var(--cream-dark); opacity: 0.85; }
+  .header-divider { display: flex; align-items: center; gap: 1rem; margin: 1.25rem auto 0; max-width: 400px; }
+  .header-divider::before, .header-divider::after { content: ''; flex: 1; height: 1.5px; background: linear-gradient(90deg, transparent, var(--straw), transparent); }
+
+  /* ── Filter Tabs ── */
+  .filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .filter-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 50px;
+    border: 1.5px solid rgba(200,150,12,0.3);
+    background: rgba(253,240,220,0.05);
+    color: var(--cream-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-tab:hover { background: rgba(245,166,35,0.1); color: var(--gold); border-color: rgba(245,166,35,0.3); }
+  .filter-tab.active { background: rgba(245,166,35,0.2); color: var(--gold); border-color: var(--straw); }
+
+  /* ── Timeline ── */
+  .timeline { position: relative; padding-left: 2.5rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, var(--straw) 5%, var(--straw) 95%, transparent);
+  }
+
+  /* ── Event Card ── */
+  .event-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    animation: eventIn 0.4s ease forwards;
+    opacity: 0;
+  }
+  @keyframes eventIn {
+    from { opacity: 0; transform: translateX(-16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .event-item.hidden { display: none; }
+
+  .timeline-dot {
+    position: absolute;
+    left: -2.5rem;
+    top: 1.1rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 3px solid var(--wood-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .event-card {
+    background: linear-gradient(160deg, rgba(74,30,8,0.85) 0%, rgba(44,21,5,0.95) 100%);
+    border: 1.5px solid rgba(200,150,12,0.2);
+    border-radius: 16px;
+    padding: 1.1rem 1.3rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .event-card:hover {
+    border-color: rgba(200,150,12,0.45);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 20px rgba(245,166,35,0.08);
+  }
+
+  .event-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .event-emoji { font-size: 1.8rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+  .event-meta { flex: 1; }
+  .event-time {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    color: var(--straw);
+    letter-spacing: 0.5px;
+    margin-bottom: 0.15rem;
+  }
+  .event-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+  .event-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: auto;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 3px;
+  }
+
+  .tag-show    { background: rgba(155,89,182,0.25); color: #C39BD3; border: 1px solid rgba(155,89,182,0.4); }
+  .tag-dance   { background: rgba(231,76,60,0.2);   color: #F1948A; border: 1px solid rgba(231,76,60,0.4); }
+  .tag-game    { background: rgba(39,174,96,0.2);   color: #82E0AA; border: 1px solid rgba(39,174,96,0.4); }
+  .tag-food    { background: rgba(245,166,35,0.2);  color: var(--gold); border: 1px solid rgba(245,166,35,0.4); }
+  .tag-fire    { background: rgba(230,126,34,0.2);  color: #F0B27A; border: 1px solid rgba(230,126,34,0.4); }
+  .tag-open    { background: rgba(52,152,219,0.2);  color: #85C1E9; border: 1px solid rgba(52,152,219,0.4); }
+
+  .event-desc { font-size: 0.85rem; color: rgba(253,240,220,0.6); line-height: 1.5; margin-top: 0.4rem; }
+  .event-artists {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+  }
+  .artist-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 4px 10px;
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.2);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--cream-dark);
+  }
+
+  /* ── Now Live Indicator ── */
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 10px;
+    background: rgba(192,57,43,0.25);
+    border: 1px solid rgba(192,57,43,0.5);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #FF8080;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background: #FF4444;
+    border-radius: 50%;
+    animation: livePulse 1s ease infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .section-day {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: var(--gold-light);
+    margin-bottom: 1.5rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-day::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--straw), transparent);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(253,240,220,0.4);
+  }
+  .empty-state span { font-size: 3rem; display: block; margin-bottom: 0.75rem; }
+
+  @media (max-width: 768px) {
+    .top-nav { padding: 0 1rem; }
+    .nav-inner { height: 58px; }
+    .nav-links a span { display: none; }
+    .nav-links a { padding: 0.45rem 0.65rem; }
+    .page-wrapper { padding: 1.25rem 1rem 3rem; }
+    .timeline { padding-left: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bandeirolas-bar">
+  <div class="string-line"></div>
+  <div class="bandeirolas-row" id="bandeirolas"></div>
+</div>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Arraiá <span>Boa Demais</span></a>
+    <ul class="nav-links">
+      <li><a href="fichas.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg>
+        <span>Fichas</span>
+      </a></li>
+      <li><a href="programacao.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span>Programação</span>
+      </a></li>
+      <li><a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        <span>Cardápio</span>
+      </a></li>
+      <li><a href="mapa.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Mapa</span>
+      </a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <header class="page-header">
+    <h1 class="page-title">Programação da Festa</h1>
+    <p class="page-subtitle">Dois dias de muita animação e forró pé de serra</p>
+    <div class="header-divider"><span>🎵</span></div>
+  </header>
+
+  <div class="filter-tabs" id="filterTabs"></div>
+
+  <div id="timelineContainer"></div>
+
+</div>
+
+<script>
+const EVENTS = [
+  { id: 1, day: 'Sábado, 21 de Junho', time: '17:00', name: 'Abertura dos Portões', emoji: '🚪', tag: 'open',   tagLabel: 'Abertura', desc: 'Chegue cedo e garanta seu lugar! Barracas já abertas, fichas disponíveis na entrada.', category: 'abertura' },
+  { id: 2, day: 'Sábado, 21 de Junho', time: '17:30', name: 'Show de Abertura', emoji: '🎺', tag: 'show',   tagLabel: 'Show', desc: 'Show de abertura com a Banda Forrozeiros do Vale animando o início da festa.', artists: ['Forrozeiros do Vale'], category: 'show' },
+  { id: 3, day: 'Sábado, 21 de Junho', time: '18:30', name: 'Quadrilha Infantil', emoji: '👧', tag: 'dance',  tagLabel: 'Quadrilha', desc: 'As crianças se apresentam em quadrilha típica com fantasias juninas. Não perca!', category: 'quadrilha' },
+  { id: 4, day: 'Sábado, 21 de Junho', time: '19:00', name: 'Bingo da Festa', emoji: '🎰', tag: 'game',   tagLabel: 'Jogo', desc: 'Rodada de bingo com prêmios incríveis. Cartelas à venda na entrada — R$5 cada.', category: 'game' },
+  { id: 5, day: 'Sábado, 21 de Junho', time: '19:30', name: 'Casamento Caipira', emoji: '💒', tag: 'dance',  tagLabel: 'Quadrilha', desc: 'A famosa encenação do casamento caipira com direito a muito humor e dança!', category: 'quadrilha' },
+  { id: 6, day: 'Sábado, 21 de Junho', time: '20:30', name: 'Acendimento da Fogueira', emoji: '🔥', tag: 'fire',   tagLabel: 'Fogueira', desc: 'Cerimônia tradicional de acendimento da fogueira de São João. Um momento mágico!', category: 'fogueira' },
+  { id: 7, day: 'Sábado, 21 de Junho', time: '21:00', name: 'Show Principal — Trio Nordestino', emoji: '🎸', tag: 'show',   tagLabel: 'Show', desc: 'O maior forró da noite com o aclamado Trio Nordestino, campeão regional de 2024.', artists: ['Trio Nordestino', 'Banda de Apoio'], category: 'show' },
+  { id: 8, day: 'Sábado, 21 de Junho', time: '23:00', name: 'Encerramento — Sábado', emoji: '🌙', tag: 'open',   tagLabel: 'Encerramento', desc: 'Fim da programação do sábado. Até amanhã!', category: 'abertura' },
+
+  { id: 9,  day: 'Domingo, 22 de Junho', time: '15:00', name: 'Abertura — Domingo', emoji: '☀️', tag: 'open',   tagLabel: 'Abertura', desc: 'Programação matutina especial com atividades para toda a família.', category: 'abertura' },
+  { id: 10, day: 'Domingo, 22 de Junho', time: '15:30', name: 'Comidas Típicas em Destaque', emoji: '🌽', tag: 'food',   tagLabel: 'Gastronomia', desc: 'Apresentação das barracas de comida típica com degustação de paçoca, cocada e muito mais.', category: 'food' },
+  { id: 11, day: 'Domingo, 22 de Junho', time: '16:30', name: 'Quadrilha Adulta', emoji: '💃', tag: 'dance',  tagLabel: 'Quadrilha', desc: 'Apresentação da quadrilha adulta, ensaiada por meses. Trajes luxuosos e muita dança!', category: 'quadrilha' },
+  { id: 12, day: 'Domingo, 22 de Junho', time: '17:30', name: 'Concurso de Dança', emoji: '🏆', tag: 'game',   tagLabel: 'Concurso', desc: 'Inscrevam-se na recepção! Prêmio para o melhor casal de forró da festa.', category: 'game' },
+  { id: 13, day: 'Domingo, 22 de Junho', time: '18:30', name: 'Bingo Final', emoji: '🎲', tag: 'game',   tagLabel: 'Jogo', desc: 'Última rodada do bingo com prêmio especial para o campeão do fim de semana.', category: 'game' },
+  { id: 14, day: 'Domingo, 22 de Junho', time: '19:30', name: 'Show de Encerramento', emoji: '🎶', tag: 'show',   tagLabel: 'Show', desc: 'Grande show final com a Banda Raízes do Sertão encerrando o Arraiá com muito estilo.', artists: ['Raízes do Sertão', 'Convidados Especiais'], category: 'show' },
+  { id: 15, day: 'Domingo, 22 de Junho', time: '21:30', name: 'Queima de Fogos', emoji: '🎆', tag: 'fire',   tagLabel: 'Fogueira', desc: 'Encerramento especial com queima de fogos e retrospectiva do fim de semana.', category: 'fogueira' },
+  { id: 16, day: 'Domingo, 22 de Junho', time: '22:00', name: 'Encerramento Geral', emoji: '🌟', tag: 'open',   tagLabel: 'Encerramento', desc: 'Até o próximo Arraiá Boa Demais! Obrigado por estar com a gente!', category: 'abertura' },
+];
+
+const FILTERS = [
+  { key: 'all',       label: 'Todos',     emoji: '📋' },
+  { key: 'show',      label: 'Shows',     emoji: '🎵' },
+  { key: 'quadrilha', label: 'Quadrilha', emoji: '💃' },
+  { key: 'game',      label: 'Jogos',     emoji: '🎰' },
+  { key: 'fogueira',  label: 'Fogueira',  emoji: '🔥' },
+  { key: 'food',      label: 'Gastronomia', emoji: '🌽' },
+];
+
+const DOT_COLORS = {
+  show: '#9B59B6', dance: '#E74C3C', game: '#27AE60',
+  food: '#F5A623', fire: '#E67E22', open: '#3498DB',
+};
+
+let activeFilter = 'all';
+
+function renderFilters() {
+  document.getElementById('filterTabs').innerHTML = FILTERS.map(f => `
+    <button class="filter-tab ${activeFilter === f.key ? 'active' : ''}"
+            data-key="${f.key}">
+      ${f.emoji} ${f.label}
+    </button>
+  `).join('');
+
+  document.querySelectorAll('.filter-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.key;
+      renderFilters();
+      renderTimeline();
+    });
+  });
+}
+
+function renderTimeline() {
+  const container = document.getElementById('timelineContainer');
+  const filtered = activeFilter === 'all' ? EVENTS : EVENTS.filter(e => e.category === activeFilter);
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state"><span>🔍</span><p>Nenhum evento nesta categoria.</p></div>`;
+    return;
+  }
+
+  const days = [...new Set(filtered.map(e => e.day))];
+  container.innerHTML = days.map(day => {
+    const dayEvents = filtered.filter(e => e.day === day);
+    return `
+      <div class="section-day">${day}</div>
+      <div class="timeline">
+        ${dayEvents.map((e, i) => `
+          <div class="event-item" style="animation-delay:${i * 0.07}s">
+            <div class="timeline-dot" style="background:${DOT_COLORS[e.tag] || '#F5A623'}">
+            </div>
+            <div class="event-card">
+              <div class="event-header">
+                <span class="event-emoji">${e.emoji}</span>
+                <div class="event-meta">
+                  <p class="event-time">⏰ ${e.time}</p>
+                  <p class="event-name">${e.name}</p>
+                </div>
+                <span class="event-tag tag-${e.tag}">${e.tagLabel}</span>
+              </div>
+              <p class="event-desc">${e.desc}</p>
+              ${e.artists ? `
+                <div class="event-artists">
+                  ${e.artists.map(a => `<span class="artist-chip">🎤 ${a}</span>`).join('')}
+                </div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+function buildBandeirolas() {
+  const colors = [
+    ['#C0392B','#E74C3C'], ['#E67E22','#F39C12'], ['#F1C40F','#F5A623'],
+    ['#27AE60','#2ECC71'], ['#2980B9','#3498DB'], ['#8E44AD','#9B59B6'],
+  ];
+  const container = document.getElementById('bandeirolas');
+  const count = Math.ceil((window.innerWidth + 40) / 44) + 2;
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const c = colors[i % colors.length];
+    const d = document.createElement('div');
+    d.className = 'bandeirola';
+    d.style.background = `linear-gradient(135deg, ${c[0]}, ${c[1]})`;
+    container.appendChild(d);
+  }
+}
+
+buildBandeirolas();
+renderFilters();
+renderTimeline();
+window.addEventListener('resize', buildBandeirolas);
+</script>
+</body>
+</html>
