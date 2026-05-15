@@ -36,14 +36,13 @@ body {
   color: var(--cream);
   min-height: 100vh;
   overflow-x: hidden;
-  cursor: none; /* custom fogueira cursor on desktop */
+  cursor: none;
 }
 
 @media (hover: none), (pointer: coarse) {
   body { cursor: auto; }
 }
 
-/* ── Woodgrain background ── */
 body::before {
   content: '';
   position: fixed; inset: 0;
@@ -70,11 +69,6 @@ body::before {
   width:44px; height:44px;
   clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
   flex-shrink: 0;
-}
-.bandeirola::after {
-  content:''; position:absolute; inset:2px;
-  clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
-  background: repeating-linear-gradient(45deg, transparent 0,transparent 4px, rgba(0,0,0,0.12) 4px, rgba(0,0,0,0.12) 5px);
 }
 .string-line {
   position:absolute; top:3px; left:0; right:0; height:2px;
@@ -117,7 +111,6 @@ body::before {
 .nav-links a svg { width:16px; height:16px; }
 @media(max-width:768px) { .nav-links a span { display:none; } .nav-links a { padding:.45rem .65rem; } .top-nav { padding:0 1rem; } .nav-inner { height:58px; } }
 
-/* Cart Nav Button */
 .nav-cart-btn {
   position:relative; display:flex; align-items:center; gap:.4rem;
   padding:.45rem .9rem; border-radius:8px;
@@ -178,6 +171,24 @@ body::before {
 }
 
 /* ══════════════════════════════════════════
+   LIMIT BANNER
+══════════════════════════════════════════ */
+.limit-banner {
+  display:flex; align-items:center; gap:.75rem;
+  padding:.75rem 1.2rem; border-radius:12px;
+  border:1.5px solid rgba(200,150,12,.35);
+  background:rgba(245,166,35,.07);
+  margin-bottom:1.25rem; font-size:.85rem; font-weight:700;
+  color:var(--cream-dark); flex-wrap:wrap; gap:.5rem;
+}
+.limit-banner .lim-item { display:flex; align-items:center; gap:.4rem; }
+.limit-bar-wrap { flex:1; min-width:120px; height:6px; background:rgba(255,255,255,.1); border-radius:10px; overflow:hidden; }
+.limit-bar { height:100%; border-radius:10px; transition:width .4s ease, background .4s; }
+.limit-bar.food { background:var(--straw); }
+.limit-bar.drink { background:#3498DB; }
+.limit-bar.over  { background:var(--red-fest); }
+
+/* ══════════════════════════════════════════
    CONTROLS
 ══════════════════════════════════════════ */
 .controls-bar {
@@ -212,7 +223,6 @@ body::before {
 .main-content { display:grid; grid-template-columns:230px 1fr; gap:2rem; align-items:start; }
 @media(max-width:900px) { .main-content { grid-template-columns:1fr; } .sidebar { display:none !important; } .mobile-cats { display:flex !important; } }
 
-/* ── Sidebar ── */
 .sidebar { position:sticky; top:5rem; }
 .sidebar-title {
   font-family:'Fredoka One',cursive; font-size:.95rem; color:var(--gold);
@@ -244,7 +254,6 @@ body::before {
 .fav-toggle:hover, .fav-toggle.active { background:rgba(200,57,43,.2); color:#FF6B6B; border-color:rgba(200,57,43,.6); }
 .fav-count { margin-left:auto; background:rgba(200,57,43,.22); border-radius:20px; padding:0 7px; font-size:.73rem; font-weight:800; }
 
-/* ── Mobile cats ── */
 .mobile-cats { display:none; gap:.5rem; overflow-x:auto; padding-bottom:.5rem; margin-bottom:1.5rem; scrollbar-width:none; }
 .mobile-cats::-webkit-scrollbar { display:none; }
 .mobile-cat-pill {
@@ -257,7 +266,6 @@ body::before {
 }
 .mobile-cat-pill.active { background:rgba(245,166,35,.2); color:var(--gold); border-color:var(--straw); }
 
-/* ── Products area ── */
 .products-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
 .products-label { font-family:'Fredoka One',cursive; font-size:1.15rem; color:var(--gold-light); }
 .products-count { font-size:.82rem; color:var(--cream-dark); opacity:.55; font-weight:600; }
@@ -321,18 +329,12 @@ body::before {
 .card-btn:hover { background:linear-gradient(135deg,rgba(245,166,35,.35),rgba(200,150,12,.28)); transform:scale(1.04); box-shadow:0 4px 16px rgba(245,166,35,.22); }
 .card-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
 .card-btn.added { background:linear-gradient(135deg,rgba(39,174,96,.3),rgba(39,174,96,.2)); border-color:#27AE60; color:#82E0AA; }
+.card-btn.limit-hit { background:linear-gradient(135deg,rgba(192,57,43,.25),rgba(192,57,43,.15)); border-color:rgba(192,57,43,.6); color:#FF8080; cursor:not-allowed; }
 
-/* ── Flying dot animation ── */
 .fly-dot {
   position:fixed; width:12px; height:12px;
   border-radius:50%; background:var(--gold);
   pointer-events:none; z-index:9999;
-  animation:flyToCart .55s cubic-bezier(.4,0,.2,1) forwards;
-}
-@keyframes flyToCart {
-  0%   { opacity:1; transform:scale(1); }
-  70%  { opacity:1; }
-  100% { opacity:0; transform:scale(.2); }
 }
 
 /* ══════════════════════════════════════════
@@ -350,7 +352,7 @@ body::before {
 .skeleton-line.price { height:22px; width:38%; }
 
 /* ══════════════════════════════════════════
-   EMPTY / ERROR STATES
+   EMPTY / ERROR
 ══════════════════════════════════════════ */
 .empty-state { text-align:center; padding:4rem 2rem; color:rgba(253,240,220,.48); grid-column:1/-1; }
 .empty-icon { font-size:4rem; margin-bottom:1rem; display:block; }
@@ -413,7 +415,6 @@ body::before {
 }
 .cart-drawer.open { transform:translateX(0); }
 
-/* Drawer bandeirolas */
 .drawer-bandeirolas { height:30px; overflow:hidden; position:relative; flex-shrink:0; }
 .drawer-bandeirolas .d-string { position:absolute; top:2px; left:0; right:0; height:1.5px; background:linear-gradient(90deg,#8B6914,#F5A623,#8B6914); }
 .drawer-bandeirolas .d-flags { display:flex; position:absolute; top:0; left:0; right:0; }
@@ -438,7 +439,6 @@ body::before {
 .drawer-body::-webkit-scrollbar { width:4px; }
 .drawer-body::-webkit-scrollbar-thumb { background:rgba(200,150,12,.3); border-radius:4px; }
 
-/* ── Cart Item ── */
 .cart-item {
   display:flex; align-items:center; gap:.85rem;
   padding:.9rem 1rem; border-radius:14px;
@@ -472,18 +472,17 @@ body::before {
   display:flex; align-items:center; justify-content:center; line-height:1;
 }
 .qty-btn:hover { background:rgba(245,166,35,.22); border-color:var(--straw); }
+.qty-btn:disabled { opacity:.3; cursor:not-allowed; }
 .qty-num { font-family:'Fredoka One',cursive; font-size:1rem; color:var(--cream); min-width:20px; text-align:center; }
 .item-remove { width:24px; height:24px; border-radius:6px; border:1.5px solid rgba(200,57,43,.3); background:rgba(200,57,43,.07); color:rgba(255,120,120,.7); font-size:.78rem; cursor:pointer; transition:all .15s; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .item-remove:hover { background:rgba(200,57,43,.25); color:#FF6B6B; border-color:rgba(200,57,43,.6); }
 .item-line-total { font-family:'Fredoka One',cursive; font-size:1rem; color:var(--gold); min-width:58px; text-align:right; flex-shrink:0; }
 
-/* ── Drawer empty ── */
 .drawer-empty { text-align:center; padding:3rem 1rem; color:rgba(253,240,220,.42); }
 .drawer-empty .e-icon { font-size:3.5rem; display:block; margin-bottom:.75rem; animation:float 3s ease-in-out infinite; }
 @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 .drawer-empty h3 { font-family:'Fredoka One',cursive; font-size:1.25rem; color:var(--gold); margin-bottom:.4rem; }
 
-/* ── Drawer footer ── */
 .drawer-foot {
   padding:1.1rem 1.2rem 1.4rem;
   border-top:1.5px solid rgba(200,150,12,.2);
@@ -521,6 +520,15 @@ body::before {
 .sum-row.discount { color:#82E0AA; }
 .sum-row.total { font-family:'Fredoka One',cursive; font-size:1.3rem; color:var(--cream); padding-top:.55rem; border-top:1.5px solid rgba(200,150,12,.22); margin-top:.5rem; }
 .sum-row.total .val { color:var(--gold); text-shadow:0 0 14px rgba(245,166,35,.3); }
+
+/* Limit warning inside drawer */
+.limit-warning {
+  display:flex; align-items:center; gap:.5rem;
+  padding:.6rem .85rem; border-radius:9px; margin-bottom:.85rem;
+  border:1.5px solid rgba(192,57,43,.45);
+  background:rgba(192,57,43,.12);
+  font-size:.8rem; font-weight:700; color:#FF9A8A; line-height:1.4;
+}
 
 .checkout-btn {
   width:100%; padding:1rem;
@@ -613,7 +621,7 @@ body::before {
 .lgpd-decline:hover { color:rgba(253,240,220,.7); }
 
 /* ══════════════════════════════════════════
-   FOGUEIRA CURSOR (desktop only)
+   FOGUEIRA CURSOR
 ══════════════════════════════════════════ */
 .fogueira-cursor {
   position:fixed; pointer-events:none; z-index:9999;
@@ -624,7 +632,6 @@ body::before {
   display:none;
 }
 
-/* ── Toast ── */
 .toast {
   position:fixed; bottom:7rem; right:1.5rem; z-index:600;
   background:linear-gradient(135deg,rgba(74,30,8,.98),rgba(44,21,5,.98));
@@ -639,9 +646,6 @@ body::before {
 }
 .toast.show { transform:translateX(0); }
 
-/* ══════════════════════════════════════════
-   MISC / RESPONSIVE
-══════════════════════════════════════════ */
 .fire-deco { position:fixed; bottom:0; left:50%; transform:translateX(-50%); font-size:2.5rem; opacity:.06; pointer-events:none; animation:flicker 3s ease infinite alternate; z-index:0; }
 @keyframes flicker { from{opacity:.04;transform:translateX(-50%) scale(1)} to{opacity:.1;transform:translateX(-50%) scale(1.06)} }
 
@@ -655,16 +659,13 @@ body::before {
 </head>
 <body>
 
-<!-- Fogueira cursor (desktop) -->
 <div class="fogueira-cursor" id="fogueiraCursor" aria-hidden="true">🔥</div>
 
-<!-- Bandeirolas -->
 <div class="bandeirolas-bar">
   <div class="string-line"></div>
   <div class="bandeirolas-row" id="bandeirolas"></div>
 </div>
 
-<!-- Nav -->
 <nav class="top-nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">Arraiá <span>Boa Demais</span></a>
@@ -688,13 +689,29 @@ body::before {
   </div>
 </nav>
 
-<!-- Page -->
 <div class="page-wrapper">
   <header class="cardapio-header">
     <h1 class="cardapio-title">Cardápio da Festa</h1>
     <p class="cardapio-subtitle">Comidas e bebidas com muito amor e jeito caipira</p>
     <div class="header-divider"><span>🌽</span></div>
   </header>
+
+  <!-- Limit banner -->
+  <div class="limit-banner" id="limitBanner">
+    <span>🍽️</span>
+    <div class="lim-item" style="flex:1;flex-direction:column;gap:3px">
+      <span style="font-size:.78rem;opacity:.75">Comidas &amp; Pratos — limite R$ 150,00</span>
+      <div class="limit-bar-wrap"><div class="limit-bar food" id="barFood" style="width:0%"></div></div>
+    </div>
+    <span id="lblFood" style="font-size:.82rem;white-space:nowrap">R$ 0,00</span>
+    <span style="opacity:.3;margin:0 .3rem">|</span>
+    <span>🥤</span>
+    <div class="lim-item" style="flex:1;flex-direction:column;gap:3px">
+      <span style="font-size:.78rem;opacity:.75">Bebidas — limite R$ 80,00</span>
+      <div class="limit-bar-wrap"><div class="limit-bar drink" id="barDrink" style="width:0%"></div></div>
+    </div>
+    <span id="lblDrink" style="font-size:.82rem;white-space:nowrap">R$ 0,00</span>
+  </div>
 
   <div class="controls-bar">
     <div class="search-wrap">
@@ -731,7 +748,6 @@ body::before {
   </div>
 </div>
 
-<!-- Floating cart bar -->
 <div class="float-cart" id="floatCart" role="status" aria-live="polite">
   <div class="float-cart-info">
     <span class="float-cart-icon">🛒</span>
@@ -743,28 +759,21 @@ body::before {
   <button class="float-cart-btn" id="floatCartBtn">Ver Carrinho</button>
 </div>
 
-<!-- Cart Drawer Overlay -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
 
-<!-- Cart Drawer -->
 <aside class="cart-drawer" id="cartDrawer" aria-label="Carrinho de compras">
-  <!-- Mini bandeirolas inside drawer -->
   <div class="drawer-bandeirolas" id="drawerBandeirolas">
     <div class="d-string"></div>
     <div class="d-flags" id="dFlags"></div>
   </div>
-
   <div class="drawer-head">
     <span class="drawer-title">🛒 Seu Carrinho</span>
     <button class="drawer-close" id="drawerClose" aria-label="Fechar carrinho">✕</button>
   </div>
-
   <div class="drawer-body" id="drawerBody"></div>
-
   <div class="drawer-foot" id="drawerFoot"></div>
 </aside>
 
-<!-- Confirmation Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" id="modal">
     <div class="checkout-view">
@@ -788,7 +797,6 @@ body::before {
   </div>
 </div>
 
-<!-- LGPD Caipira -->
 <div class="lgpd-overlay" id="lgpdOverlay" role="dialog" aria-modal="true" aria-labelledby="lgpdTitle">
   <div class="lgpd-inner">
     <div class="lgpd-emoji">🤠</div>
@@ -812,16 +820,43 @@ body::before {
 <div class="toast" id="toast"></div>
 
 <script type="module">
-/* ══════════════════════════════════════════
-   ARRAIÁ BOA DEMAIS — index.html v3
-   Cardápio + Carrinho integrado
-   Cloudflare Pages | ES Modules
-══════════════════════════════════════════ */
-
 import menuService from './menuService.js';
 import cartService from './cartService.js';
 
-/* ── Constants ── */
+/* ══════════════════════════════════════════
+   LIMITES DE PEDIDO
+══════════════════════════════════════════ */
+const LIMIT_FOOD  = 150;   // Espetinhos, Pratos, Comes e Bebes, Doces
+const LIMIT_DRINK = 80;    // Bebidas
+const DRINK_CATS  = new Set(['Bebidas']);
+
+function isBeverage(category) {
+  return DRINK_CATS.has(category);
+}
+
+/* Retorna { foodTotal, drinkTotal } do carrinho atual */
+function getCartTotals(items) {
+  let food = 0, drink = 0;
+  items.forEach(i => {
+    const sub = i.price * i.quantity;
+    if (isBeverage(i.category)) drink += sub;
+    else food += sub;
+  });
+  return { foodTotal: food, drinkTotal: drink };
+}
+
+/* Verifica se um item pode ser adicionado/incrementado */
+function canAdd(item, cartItems) {
+  const { foodTotal, drinkTotal } = getCartTotals(cartItems);
+  if (isBeverage(item.category)) {
+    return drinkTotal + item.price <= LIMIT_DRINK + 0.001;
+  }
+  return foodTotal + item.price <= LIMIT_FOOD + 0.001;
+}
+
+/* ══════════════════════════════════════════
+   CONSTANTS
+══════════════════════════════════════════ */
 const CAT_ICONS = {
   'Todos':'🍽️','Espetinhos':'🍢','Comes e Bebes':'🌽',
   'Doces':'🍮','Bebidas':'🥤','Pratos':'🍛',
@@ -833,9 +868,12 @@ const BAND_COLORS = [
 ];
 const fmt = v => `R$ ${Number(v).toFixed(2).replace('.',',')}`;
 
-/* ── State ── */
+/* ══════════════════════════════════════════
+   STATE
+   favorites: Set de IDs (sanificado contra itens que não existem mais)
+══════════════════════════════════════════ */
 let allItems       = [];
-let favorites      = JSON.parse(localStorage.getItem('arraia_favs') || '[]');
+let favorites      = new Set(); // populado APÓS carregar allItems
 let activeCategory = 'all';
 let showFavs       = false;
 let searchQuery    = '';
@@ -858,10 +896,7 @@ function buildBandeirolas(containerId = 'bandeirolas', flagW = 44) {
     el.appendChild(d);
   }
 }
-
-function buildDrawerBandeirolas() {
-  buildBandeirolas('dFlags', 28);
-}
+function buildDrawerBandeirolas() { buildBandeirolas('dFlags', 28); }
 
 /* ══════════════════════════════════════════
    TOAST
@@ -875,6 +910,27 @@ function showToast(msg) {
 }
 
 /* ══════════════════════════════════════════
+   LIMIT BANNER
+══════════════════════════════════════════ */
+function updateLimitBanner() {
+  const cartItems = cartService.getItems();
+  const { foodTotal, drinkTotal } = getCartTotals(cartItems);
+
+  const pctFood  = Math.min((foodTotal  / LIMIT_FOOD)  * 100, 100);
+  const pctDrink = Math.min((drinkTotal / LIMIT_DRINK) * 100, 100);
+
+  const barFood  = document.getElementById('barFood');
+  const barDrink = document.getElementById('barDrink');
+  barFood.style.width  = pctFood  + '%';
+  barDrink.style.width = pctDrink + '%';
+  barFood.className    = 'limit-bar food'  + (pctFood  >= 100 ? ' over' : '');
+  barDrink.className   = 'limit-bar drink' + (pctDrink >= 100 ? ' over' : '');
+
+  document.getElementById('lblFood').textContent  = fmt(foodTotal)  + ' / ' + fmt(LIMIT_FOOD);
+  document.getElementById('lblDrink').textContent = fmt(drinkTotal) + ' / ' + fmt(LIMIT_DRINK);
+}
+
+/* ══════════════════════════════════════════
    CART BAR + BADGE
 ══════════════════════════════════════════ */
 function updateCartUI() {
@@ -882,12 +938,14 @@ function updateCartUI() {
   const bar   = document.getElementById('floatCart');
   const badge = document.getElementById('navBadge');
 
-  document.getElementById('floatQty').textContent   = `${count} item${count !== 1 ? 's' : ''}`;
-  document.getElementById('floatTotal').textContent  = fmt(total);
+  document.getElementById('floatQty').textContent  = `${count} item${count !== 1 ? 's' : ''}`;
+  document.getElementById('floatTotal').textContent = fmt(total);
 
   bar.classList.toggle('visible', count > 0);
   badge.textContent = count || '';
   badge.classList.toggle('visible', count > 0);
+
+  updateLimitBanner();
 }
 
 /* ══════════════════════════════════════════
@@ -896,24 +954,17 @@ function updateCartUI() {
 function flyToCart(srcEl) {
   const cartIcon = document.getElementById('navCartBtn');
   if (!cartIcon || !srcEl) return;
-
   const srcRect  = srcEl.getBoundingClientRect();
   const destRect = cartIcon.getBoundingClientRect();
-
   const dot = document.createElement('div');
   dot.className = 'fly-dot';
-  dot.style.cssText = `
-    left:${srcRect.left + srcRect.width / 2}px;
-    top:${srcRect.top + srcRect.height / 2}px;
-  `;
+  dot.style.cssText = `left:${srcRect.left + srcRect.width/2}px;top:${srcRect.top + srcRect.height/2}px;`;
   document.body.appendChild(dot);
-
-  // Animate along a parabola using Web Animations API
   dot.animate([
-    { left: `${srcRect.left + srcRect.width/2}px`,  top: `${srcRect.top + srcRect.height/2}px`,  opacity:1, transform:'scale(1)' },
-    { left: `${(srcRect.left + destRect.left)/2}px`, top: `${Math.min(srcRect.top, destRect.top) - 60}px`, opacity:.9, transform:'scale(.8)' },
-    { left: `${destRect.left + destRect.width/2}px`, top: `${destRect.top + destRect.height/2}px`,  opacity:0, transform:'scale(.2)' },
-  ], { duration: 520, easing:'cubic-bezier(.4,0,.2,1)', fill:'forwards' })
+    { left:`${srcRect.left + srcRect.width/2}px`,  top:`${srcRect.top + srcRect.height/2}px`,  opacity:1, transform:'scale(1)' },
+    { left:`${(srcRect.left + destRect.left)/2}px`, top:`${Math.min(srcRect.top, destRect.top) - 60}px`, opacity:.9, transform:'scale(.8)' },
+    { left:`${destRect.left + destRect.width/2}px`, top:`${destRect.top + destRect.height/2}px`,  opacity:0, transform:'scale(.2)' },
+  ], { duration:520, easing:'cubic-bezier(.4,0,.2,1)', fill:'forwards' })
   .onfinish = () => dot.remove();
 }
 
@@ -926,7 +977,6 @@ function openDrawer() {
   document.body.style.overflow = 'hidden';
   renderDrawer();
 }
-
 function closeDrawer() {
   document.getElementById('drawerOverlay').classList.remove('open');
   document.getElementById('cartDrawer').classList.remove('open');
@@ -937,6 +987,9 @@ function renderDrawer() {
   const { items, count, subtotal, discount, total, coupon } = cartService.getSummary();
   const body = document.getElementById('drawerBody');
   const foot = document.getElementById('drawerFoot');
+  const { foodTotal, drinkTotal } = getCartTotals(items);
+  const foodOver  = foodTotal  >= LIMIT_FOOD;
+  const drinkOver = drinkTotal >= LIMIT_DRINK;
 
   if (count === 0) {
     body.innerHTML = `
@@ -949,15 +1002,17 @@ function renderDrawer() {
     return;
   }
 
-  body.innerHTML = items.map((item, i) => `
+  body.innerHTML = items.map((item, i) => {
+    const canInc = canAdd(item, items); // pode ainda adicionar mais desse item?
+    return `
     <div class="cart-item" style="animation-delay:${i*.07}s" data-id="${item.id}">
       <div class="cart-thumb">
         ${item.image_url
           ? `<img src="${item.image_url}" alt="${item.name}"
                   onerror="this.style.display='none';this.nextSibling.style.display='flex'"
                   style="width:100%;height:100%;object-fit:cover;border-radius:10px">
-             <span style="display:none;font-size:1.7rem">${item.emoji}</span>`
-          : item.emoji}
+             <span style="display:none;font-size:1.7rem">${item.emoji || '🍽️'}</span>`
+          : (item.emoji || '🍽️')}
       </div>
       <div class="cart-item-info">
         <p class="cart-item-cat">${item.category}</p>
@@ -967,13 +1022,23 @@ function renderDrawer() {
       <div class="qty-ctrl">
         <button class="qty-btn" data-action="dec" data-id="${item.id}" aria-label="Diminuir">−</button>
         <span class="qty-num">${item.quantity}</span>
-        <button class="qty-btn" data-action="inc" data-id="${item.id}" aria-label="Aumentar">+</button>
+        <button class="qty-btn" data-action="inc" data-id="${item.id}" aria-label="Aumentar"
+                ${!canInc ? 'disabled title="Limite atingido"' : ''}>+</button>
       </div>
       <div class="item-line-total">${fmt(item.price * item.quantity)}</div>
       <button class="item-remove" data-id="${item.id}" aria-label="Remover ${item.name}">✕</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+
+  const limitWarning = (foodOver || drinkOver)
+    ? `<div class="limit-warning">
+        ⚠️ Limite atingido:
+        ${foodOver  ? `🍽️ Comidas (R$ ${LIMIT_FOOD},00) ` : ''}
+        ${drinkOver ? `🥤 Bebidas (R$ ${LIMIT_DRINK},00)` : ''}
+       </div>` : '';
 
   foot.innerHTML = `
+    ${limitWarning}
     ${!coupon ? `
       <div class="coupon-row">
         <input class="coupon-input" id="couponInput" placeholder="Cupom de desconto" maxlength="20">
@@ -991,11 +1056,21 @@ function renderDrawer() {
     <button class="checkout-btn" id="checkoutBtn">🎪 Finalizar Pedido</button>
     <button class="clear-all-btn" id="clearAllBtn">🗑️ Limpar carrinho</button>`;
 
-  /* Drawer event listeners */
+  /* Drawer events */
   body.querySelectorAll('.qty-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const { action, id } = btn.dataset;
-      action === 'inc' ? cartService.increment(id) : cartService.decrement(id);
+      if (action === 'inc') {
+        const item = allItems.find(i => i.id === id);
+        if (!item) return;
+        if (!canAdd(item, cartService.getItems())) {
+          showToast(`⚠️ Limite de ${isBeverage(item.category) ? 'bebidas (R$ ' + LIMIT_DRINK + ',00)' : 'comidas (R$ ' + LIMIT_FOOD + ',00)'} atingido!`);
+          return;
+        }
+        cartService.increment(id);
+      } else {
+        cartService.decrement(id);
+      }
       updateCartUI(); renderDrawer();
     });
   });
@@ -1045,10 +1120,7 @@ function openCheckoutModal() {
   document.getElementById('modal').classList.remove('success');
   document.getElementById('modalOverlay').classList.add('open');
 }
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 
 /* ══════════════════════════════════════════
    CATEGORIES
@@ -1094,7 +1166,7 @@ window.__selectCat = function(cat) {
 ══════════════════════════════════════════ */
 function getFiltered() {
   let items = [...allItems];
-  if (showFavs) items = items.filter(i => favorites.includes(i.id));
+  if (showFavs) items = items.filter(i => favorites.has(i.id));
   if (activeCategory !== 'all') items = items.filter(i => i.category === activeCategory);
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
@@ -1117,10 +1189,11 @@ function getFiltered() {
    RENDER PRODUCTS
 ══════════════════════════════════════════ */
 function renderProducts() {
-  const items = getFiltered();
-  const grid  = document.getElementById('productsGrid');
-  const label = document.getElementById('productsLabel');
-  const count = document.getElementById('productsCount');
+  const items     = getFiltered();
+  const cartItems = cartService.getItems();
+  const grid      = document.getElementById('productsGrid');
+  const label     = document.getElementById('productsLabel');
+  const count     = document.getElementById('productsCount');
 
   if (showFavs)                label.textContent = 'Meus Favoritos';
   else if (activeCategory !== 'all') label.textContent = activeCategory;
@@ -1139,10 +1212,20 @@ function renderProducts() {
   }
 
   grid.innerHTML = items.map((item, idx) => {
-    const isFav  = favorites.includes(item.id);
-    const inCart = cartService.has(item.id);
-    const price  = typeof item.price === 'number' ? item.price.toFixed(2) : item.price;
-    const emoji  = item.emoji || '🍽️';
+    const isFav   = favorites.has(item.id);
+    const inCart  = cartService.has(item.id);
+    const hitLimit = item.available && !inCart && !canAdd(item, cartItems);
+    const price   = typeof item.price === 'number' ? item.price.toFixed(2) : item.price;
+    const emoji   = item.emoji || '🍽️';
+
+    let btnClass = 'card-btn';
+    let btnLabel = '+ Pedir';
+    let btnDisabled = false;
+
+    if (!item.available)  { btnLabel = 'Esgotado'; btnDisabled = true; }
+    else if (inCart)      { btnClass += ' added';     btnLabel = '✔ No carrinho'; }
+    else if (hitLimit)    { btnClass += ' limit-hit'; btnLabel = '⚠️ Limite'; btnDisabled = true; }
+
     return `
       <article class="product-card ${!item.available ? 'unavailable' : ''}"
                style="animation-delay:${idx * .055}s" data-id="${item.id}">
@@ -1156,7 +1239,9 @@ function renderProducts() {
             ${item.featured   ? '<span class="badge badge-destaque">⭐ Destaque</span>' : ''}
             ${!item.available ? '<span class="badge badge-esgotado">⛔ Esgotado</span>' : ''}
           </div>
-          <button class="fav-btn ${isFav ? 'active' : ''}" data-fav="${item.id}" aria-label="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
+          <button class="fav-btn ${isFav ? 'active' : ''}"
+                  data-fav="${item.id}"
+                  aria-label="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
             ${isFav ? '❤️' : '🤍'}
           </button>
           <div class="image-overlay"></div>
@@ -1167,22 +1252,46 @@ function renderProducts() {
           <p class="card-desc">${item.description || ''}</p>
           <div class="card-footer">
             <p class="card-price"><span class="currency">R$</span> ${String(price).replace('.',',')}</p>
-            <button class="card-btn ${inCart ? 'added' : ''}"
-                    data-add="${item.id}"
-                    ${!item.available ? 'disabled' : ''}
+            <button class="${btnClass}" data-add="${item.id}" ${btnDisabled ? 'disabled' : ''}
                     aria-label="Adicionar ${item.name} ao carrinho">
-              ${item.available ? (inCart ? '✔ No carrinho' : '+ Pedir') : 'Esgotado'}
+              ${btnLabel}
             </button>
           </div>
         </div>
       </article>`;
   }).join('');
 
-  /* Fav buttons */
+  /* Fav buttons — toggle puro, sem re-render geral */
   grid.querySelectorAll('[data-fav]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      toggleFav(btn.dataset.fav, btn);
+      const id  = btn.dataset.fav;
+      const now = favorites.has(id);
+      if (now) {
+        favorites.delete(id);
+        btn.textContent = '🤍';
+        btn.classList.remove('active');
+        btn.setAttribute('aria-label', 'Adicionar aos favoritos');
+        showToast('💔 Removido dos favoritos');
+      } else {
+        favorites.add(id);
+        btn.textContent = '❤️';
+        btn.classList.add('active');
+        btn.setAttribute('aria-label', 'Remover dos favoritos');
+        showToast('❤️ Adicionado aos favoritos!');
+      }
+      saveFavorites();
+      updateFavCount();
+      /* Se estiver no modo favoritos, remove o card do grid sem re-render total */
+      if (showFavs && now) {
+        const card = btn.closest('.product-card');
+        if (card) {
+          card.style.transition = 'opacity .25s, transform .25s';
+          card.style.opacity = '0';
+          card.style.transform = 'scale(.95)';
+          setTimeout(() => { card.remove(); updateFavCount(); }, 260);
+        }
+      }
     });
   });
 
@@ -1192,40 +1301,56 @@ function renderProducts() {
       e.stopPropagation();
       const item = allItems.find(i => i.id === btn.dataset.add);
       if (!item) return;
+
+      /* Verificação de limite no momento do clique */
+      if (!canAdd(item, cartService.getItems())) {
+        const lbl = isBeverage(item.category)
+          ? `bebidas (R$ ${LIMIT_DRINK},00)`
+          : `comidas (R$ ${LIMIT_FOOD},00)`;
+        showToast(`⚠️ Limite de ${lbl} atingido!`);
+        btn.classList.add('limit-hit');
+        btn.textContent = '⚠️ Limite';
+        btn.disabled = true;
+        return;
+      }
+
       cartService.add(item);
       flyToCart(btn);
       btn.textContent = '✔ No carrinho';
+      btn.classList.remove('limit-hit');
       btn.classList.add('added');
       updateCartUI();
       showToast(`🛒 "${item.name}" adicionado!`);
+
+      /* Atualiza outros botões do mesmo item se visíveis */
+      grid.querySelectorAll(`[data-add="${item.id}"]`).forEach(b => {
+        if (b !== btn) { b.textContent = '✔ No carrinho'; b.classList.add('added'); }
+      });
     });
   });
 }
 
 /* ══════════════════════════════════════════
-   FAVORITES
+   FAVORITES — helpers
 ══════════════════════════════════════════ */
-function toggleFav(id, btn) {
-  const idx = favorites.indexOf(id);
-  if (idx === -1) {
-    favorites.push(id);
-    btn.textContent = '❤️';
-    btn.classList.add('active');
-    showToast('❤️ Adicionado aos favoritos!');
-  } else {
-    favorites.splice(idx, 1);
-    btn.textContent = '🤍';
-    btn.classList.remove('active');
-    showToast('💔 Removido dos favoritos');
+function loadFavorites() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('arraia_favs') || '[]');
+    // Sanifica: só IDs que existem em allItems
+    const validIds = new Set(allItems.map(i => i.id));
+    favorites = new Set(raw.filter(id => validIds.has(id)));
+  } catch {
+    favorites = new Set();
   }
-  localStorage.setItem('arraia_favs', JSON.stringify(favorites));
-  updateFavCount();
-  if (showFavs) renderProducts();
+}
+
+function saveFavorites() {
+  localStorage.setItem('arraia_favs', JSON.stringify([...favorites]));
 }
 
 function updateFavCount() {
   const el = document.getElementById('favCount');
-  el.textContent = favorites.length > 0 ? favorites.length : '';
+  el.textContent = favorites.size > 0 ? favorites.size : '';
 }
 
 /* ══════════════════════════════════════════
@@ -1260,35 +1385,26 @@ function showError(msg) {
 }
 
 /* ══════════════════════════════════════════
-   FOGUEIRA CURSOR (desktop, prefers-motion)
+   FOGUEIRA CURSOR
 ══════════════════════════════════════════ */
 (function initFogueira() {
-  const isDesktop  = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  const reduced    = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const cursor     = document.getElementById('fogueiraCursor');
-
+  const isDesktop = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const reduced   = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const cursor    = document.getElementById('fogueiraCursor');
   if (!isDesktop || reduced) return;
-
   cursor.style.display = 'block';
-  let mx = -200, my = -200, cx = -200, cy = -200;
-  let raf;
-
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
-  document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
-
+  let mx=-200, my=-200, cx=-200, cy=-200, raf;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  document.addEventListener('mouseleave', () => { cursor.style.opacity='0'; });
+  document.addEventListener('mouseenter', () => { cursor.style.opacity='1'; });
   function loop() {
-    cx += (mx - cx) * .12;
-    cy += (my - cy) * .12;
+    cx += (mx-cx)*.12; cy += (my-cy)*.12;
     cursor.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-75%)`;
     raf = requestAnimationFrame(loop);
   }
   loop();
-
-  /* Pause when tab hidden */
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) cancelAnimationFrame(raf);
-    else loop();
+    if (document.hidden) cancelAnimationFrame(raf); else loop();
   });
 })();
 
@@ -1297,12 +1413,9 @@ function showError(msg) {
 ══════════════════════════════════════════ */
 (function initLGPD() {
   if (localStorage.getItem('arraia_lgpd')) return;
-  setTimeout(() => {
-    document.getElementById('lgpdOverlay').classList.add('show');
-  }, 1200);
-
+  setTimeout(() => { document.getElementById('lgpdOverlay').classList.add('show'); }, 1200);
   document.getElementById('lgpdAccept').addEventListener('click', () => {
-    localStorage.setItem('arraia_lgpd', '1');
+    localStorage.setItem('arraia_lgpd','1');
     document.getElementById('lgpdOverlay').classList.remove('show');
   });
   document.getElementById('lgpdDecline').addEventListener('click', () => {
@@ -1318,7 +1431,7 @@ document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 });
 document.getElementById('modalConfirm').addEventListener('click', () => {
-  const num = Math.floor(Math.random() * 900) + 100;
+  const num = Math.floor(Math.random()*900)+100;
   document.getElementById('orderNumber').textContent = `#${num}`;
   document.getElementById('modal').classList.add('success');
   cartService.clear();
@@ -1336,10 +1449,8 @@ document.getElementById('navCartBtn').addEventListener('click', openDrawer);
 document.getElementById('floatCartBtn').addEventListener('click', openDrawer);
 document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
 document.getElementById('drawerClose').addEventListener('click', closeDrawer);
-
-/* Escape key closes drawer */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeDrawer(); closeModal(); }
+  if (e.key==='Escape') { closeDrawer(); closeModal(); }
 });
 
 /* ══════════════════════════════════════════
@@ -1371,11 +1482,15 @@ async function init() {
   buildDrawerBandeirolas();
   showSkeleton();
   updateCartUI();
-  updateFavCount();
 
   try {
     const data = await menuService.getAll();
     allItems = data.items || data;
+
+    /* Carrega favoritos APÓS ter allItems, para sanificar IDs órfãos */
+    loadFavorites();
+    updateFavCount();
+
     renderCategories();
     renderProducts();
   } catch (err) {
